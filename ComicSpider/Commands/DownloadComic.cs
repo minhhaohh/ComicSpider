@@ -7,7 +7,7 @@ using System.ComponentModel;
 
 namespace ComicSpider.Commands
 {
-    public class DownloadComic : AsyncCommand<GetCategories.Settings>
+    public class DownloadComic : AsyncCommand<DownloadComic.Settings>
     {
         public sealed class Settings : CommandSettings
         {
@@ -23,7 +23,7 @@ namespace ComicSpider.Commands
             }
         }
 
-        public async override Task<int> ExecuteAsync(CommandContext context, GetCategories.Settings settings)
+        public async override Task<int> ExecuteAsync(CommandContext context, DownloadComic.Settings settings)
         {
             EpubWriter writer = new EpubWriter();
             writer.AddFile("style.css", File.ReadAllText("./Resources/Css/Style.css"), EpubContentType.Css);
