@@ -56,7 +56,7 @@ namespace ComicSpider.Commands
             }
             else
             {
-                AnsiConsole.MarkupLine("[bold red]Category button not found!!![/]");
+                AnsiConsole.MarkupLine("[bold red]Error:[/] Category button not found!!!");
                 return 0;
             }
             AnsiConsole.Write(table);

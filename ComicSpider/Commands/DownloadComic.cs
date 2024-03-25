@@ -48,7 +48,7 @@ namespace ComicSpider.Commands
                 }
                 else
                 {
-                    AnsiConsole.MarkupLine("[bold red]Chapters not found!!![/]");
+                    AnsiConsole.MarkupLine("[bold red]Error:[/] Chapters not found!!!");
                 }
             }
 
@@ -138,7 +138,7 @@ namespace ComicSpider.Commands
                 chapterDetailElement = await page.WaitForSelectorAsync("div.chapter-detail");
             }
             writer.Write($"comic.epub");
-            AnsiConsole.MarkupLine("[bold blue]DOWNLOAD DONE.[/]");
+            AnsiConsole.MarkupLine("[bold green]Success: [/]Download done.");
             return 0;
         }
     }

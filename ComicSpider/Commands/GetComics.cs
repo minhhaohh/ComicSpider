@@ -58,8 +58,9 @@ namespace ComicSpider.Commands
                 );
 
             var total = 0;
+            var index = 1;
 
-            for (int currentPage = 3; currentPage < 3 + 2; currentPage++)
+            for (int currentPage = settings.Page; currentPage < settings.Page + settings.Count; currentPage++)
             {
                 var pageNumberElements = await page.QuerySelectorAllAsync("li.vue-page-item");
                 if (pageNumberElements != null && pageNumberElements.Count > 0)
@@ -67,7 +68,7 @@ namespace ComicSpider.Commands
                     var lastPageNumber = await pageNumberElements[pageNumberElements.Count - 1].InnerTextAsync();
                     if (settings.Page + settings.Count - 1 > int.Parse(lastPageNumber))
                     {
-                        AnsiConsole.MarkupLine($"[bold red]There is {lastPageNumber} page total!!![/]");
+                        AnsiConsole.MarkupLine($"[bold red]Error:[/] There are {lastPageNumber} pages total!!!");
                         return 0;
                     }
 
@@ -81,7 +82,7 @@ namespace ComicSpider.Commands
                             await pageNumberChooserElement.ClickAsync();
 
                             var inputPageElement = await page.QuerySelectorAsync("div.box-option-paginate input");
-                            await inputPageElement.FillAsync("3");
+                            await inputPageElement.FillAsync(settings.Page.ToString());
 
                             var buttonMoveElement = await page.QuerySelectorAsync("div.box-option-paginate button.btn.btn-primary");
                             await buttonMoveElement.ClickAsync();
@@ -101,9 +102,9 @@ namespace ComicSpider.Commands
                 }
                 else
                 {
-                    if (3 != 1 && 2 != 1)
+                    if (settings.Page != 1 && settings.Count != 1)
                     {
-                        AnsiConsole.MarkupLine("[bold red]There is 1 page total!!![/]");
+                        AnsiConsole.MarkupLine("[bold red]Error: [/]There is 1 page total!!!");
                         return 0;
                     }
                 }
@@ -128,8 +129,9 @@ namespace ComicSpider.Commands
                         var totalChapterElement = await comicElement.QuerySelectorAsync("div.story-info span");
                         var totalChapter = (await totalChapterElement.InnerTextAsync()).Trim();
 
-                        table.AddRow((i + 1).ToString(), title, author, totalChapter, host + href);
+                        table.AddRow(index.ToString(), title, author, totalChapter, host + href);
                         total++;
+                        index++;
                     }
                 }
             }
