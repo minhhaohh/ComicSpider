@@ -42,7 +42,6 @@ namespace ComicSpider.Commands
             await page.WaitForSelectorAsync("div.container");
 
             var uri = new Uri(settings.Url);
-            var host = uri.Host;
 
             var table = new Table()
             {
@@ -102,7 +101,7 @@ namespace ComicSpider.Commands
                 }
                 else
                 {
-                    if (settings.Page != 1 && settings.Count != 1)
+                    if (settings.Page != 1 || settings.Count != 1)
                     {
                         AnsiConsole.MarkupLine("[bold red]Error: [/]There is 1 page total!!!");
                         return 0;
@@ -129,7 +128,7 @@ namespace ComicSpider.Commands
                         var totalChapterElement = await comicElement.QuerySelectorAsync("div.story-info span");
                         var totalChapter = (await totalChapterElement.InnerTextAsync()).Trim();
 
-                        table.AddRow(index.ToString(), title, author, totalChapter, host + href);
+                        table.AddRow(index.ToString(), title, author, totalChapter, "https://" + uri.Host + href);
                         total++;
                         index++;
                     }

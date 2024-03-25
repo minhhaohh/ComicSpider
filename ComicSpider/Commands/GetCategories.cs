@@ -29,7 +29,6 @@ namespace ComicSpider.Commands
             await page.GotoAsync(settings.Url);
 
             var uri = new Uri(settings.Url);
-            var host = uri.Host;
 
             var table = new Table()
             {
@@ -51,7 +50,7 @@ namespace ComicSpider.Commands
                 {
                     var title = (await categories[i].InnerTextAsync()).Trim();
                     var href = await categories[i].GetAttributeAsync("href");
-                    table.AddRow((i + 1).ToString(), title, host + href);
+                    table.AddRow((i + 1).ToString(), title, "https://" + uri.Host + href);
                 }
             }
             else
