@@ -67,9 +67,10 @@ namespace ComicSpider.Services
 
             for (int currentPage = pageNumber; currentPage < pageNumber + countNumber; currentPage++)
             {
-                var pageNumberElements = await page.QuerySelectorAllAsync("li.vue-page-item");
-                if (pageNumberElements != null && pageNumberElements.Count > 0)
+                var pageNavigationElement = await page.WaitForSelectorAsync("ul.vue-pagination");
+                if (pageNavigationElement != null)
                 {
+                    var pageNumberElements = await pageNavigationElement.QuerySelectorAllAsync("li.vue-page-item");
                     var lastPageNumber = await pageNumberElements[pageNumberElements.Count - 1].InnerTextAsync();
                     if (pageNumber + countNumber - 1 > int.Parse(lastPageNumber))
                     {

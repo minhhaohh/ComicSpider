@@ -1,19 +1,29 @@
 ﻿using ComicSpider.Models;
-using EpubSharp.Format;
+using CsvHelper;
 using EpubSharp;
+using EpubSharp.Format;
+using System.Globalization;
 
 namespace ComicSpider.Services
 {
-    public class EpubComicOutput : IComicOutput
+    public class FileComicOutput : IComicOutput
     {
         public void SaveCategories(List<Category> categories)
         {
-            throw new NotImplementedException();
+            using (var writer = new StreamWriter($"categories_{DateTime.Now:yyyyMMdd}_{DateTime.Now:HHmmss}.csv"))
+            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+                csv.WriteRecords(categories);
+            }
         }
 
         public void SaveComics(List<Comic> comics)
         {
-            throw new NotImplementedException();
+            using (var writer = new StreamWriter($"comics_{DateTime.Now:yyyyMMdd}_{DateTime.Now:HHmmss}.csv"))
+            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+                csv.WriteRecords(comics);
+            }
         }
 
         public void SaveChapters(List<Chapter> chapters)
@@ -35,7 +45,7 @@ namespace ComicSpider.Services
 
                 writer.AddChapter(chapter.Title, string.Format(chapterTemplate, chapter.Title, chapterContent));
             }
-            writer.Write($"comic.epub");
+            writer.Write($"comic_{DateTime.Now:yyyyMMdd}_{DateTime.Now:HHmmss}.epub");
         }
     }
 }

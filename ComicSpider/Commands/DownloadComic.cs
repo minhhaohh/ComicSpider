@@ -27,7 +27,7 @@ namespace ComicSpider.Commands
             {
                 new BNSComicDownloader()
             };
-            var output = new EpubComicOutput();
+            var output = new FileComicOutput();
             var downloadManager = new DownloadManager(downloaders, output);
 
             await downloadManager.InitializeAsync();
