@@ -3,7 +3,7 @@ using Spectre.Console.Cli;
 
 internal class Program
 {
-    private static void Main(string[] args)
+    static void Main(string[] args)
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
         var app = new CommandApp();

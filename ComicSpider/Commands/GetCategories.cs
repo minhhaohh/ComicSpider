@@ -1,4 +1,4 @@
-﻿using Microsoft.Playwright;
+﻿using ComicSpider.Services;
 using Spectre.Console;
 using Spectre.Console.Cli;
 using System.ComponentModel;
@@ -23,42 +23,17 @@ namespace ComicSpider.Commands
 
         public async override Task<int> ExecuteAsync(CommandContext context, Settings settings)
         {
-            using var playwright = await Playwright.CreateAsync();
-            await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = false });
-            var page = await browser.NewPageAsync();
-            await page.GotoAsync(settings.Url);
-
-            var uri = new Uri(settings.Url);
-
-            var table = new Table()
+            var downloaders = new List<IComicDowloader>()
             {
-                Title = new TableTitle("LIST OF CATEGORIES", "bold green"),
-                Border = TableBorder.Rounded
+                new BNSComicDownloader()
             };
-            table.AddColumns(
-                "[blue bold]No[/]",
-                "[blue bold]Gategory[/]",
-                "[blue bold]URL[/]"
-                );
+            var output = new ConsoleComicOutput();
+            var downloadManager = new DownloadManager(downloaders, output);
 
-            var categoryButton = await page.QuerySelectorAsync("a.item-link[data-target='#allCategory']");
-            if (categoryButton != null)
-            {
-                await categoryButton.ClickAsync();
-                var categories = await page.QuerySelectorAllAsync("a.categories-item-modal.categories-modal[data-dismiss='modal']");
-                for (int i = 0; i < categories.Count; i++)
-                {
-                    var title = (await categories[i].InnerTextAsync()).Trim();
-                    var href = await categories[i].GetAttributeAsync("href");
-                    table.AddRow((i + 1).ToString(), title, "https://" + uri.Host + href);
-                }
-            }
-            else
-            {
-                AnsiConsole.MarkupLine("[bold red]Error:[/] Category button not found!!!");
-                return 0;
-            }
-            AnsiConsole.Write(table);
+            await downloadManager.InitializeAsync();
+
+            await downloadManager.GetCategoriesAsync(settings.Url);
+
             return 0;
         }
     }
