@@ -20,7 +20,7 @@ namespace ComicSpider.Services
             var result = new List<Category>();
 
             var args = new DownloadEventArgs();
-            args.progress = 0;
+            args.Progress = 0;
             OnDownloadEvent(args);
 
             var page = context.Page;
@@ -40,12 +40,12 @@ namespace ComicSpider.Services
                     var href = await categories[i].GetAttributeAsync("href");
                     result.Add(new Category(name, uri.Scheme + "://" + uri.Host + href));
 
-                    args.progress = (i + 1) * 100 / categories.Count;
+                    args.Progress = (i + 1) * 100 / categories.Count;
                     OnDownloadEvent(args);
                 }
             }
 
-            args.progress = 100;
+            args.Progress = 100;
             OnDownloadEvent(args);
 
             return result;
@@ -56,7 +56,7 @@ namespace ComicSpider.Services
             var result = new List<Comic>();
 
             var args = new DownloadEventArgs();
-            args.progress = 0;
+            args.Progress = 0;
             OnDownloadEvent(args);
 
             var page = context.Page;
@@ -110,11 +110,11 @@ namespace ComicSpider.Services
                         result.Add(new Comic(title, author, totalChapter, uri.Scheme + "://" + uri.Host + href));
                     }
                 }
-                args.progress = (currentPage - (pageNumber - 1)) * 100 / countNumber;
+                args.Progress = (currentPage - (pageNumber - 1)) * 100 / countNumber;
                 OnDownloadEvent(args);
             }
 
-            args.progress = 100;
+            args.Progress = 100;
             OnDownloadEvent(args);
 
             return result;
@@ -125,7 +125,7 @@ namespace ComicSpider.Services
             var result = new List<Chapter>();
 
             var args = new DownloadEventArgs();
-            args.progress = 0;
+            args.Progress = 0;
             OnDownloadEvent(args);
 
             var page = context.Page;
@@ -152,12 +152,12 @@ namespace ComicSpider.Services
                 await nextChapterButtonElement.ClickAsync();
                 chapterDetailElement = await page.WaitForSelectorAsync("div.chapter-detail");
 
-                args.progress = (currentChapter) * 100 / totalChapter;
+                args.Progress = (currentChapter) * 100 / totalChapter;
                 OnDownloadEvent(args);
                 currentChapter++;
             }
 
-            args.progress = 100;
+            args.Progress = 100;
             OnDownloadEvent(args);
 
             return result;

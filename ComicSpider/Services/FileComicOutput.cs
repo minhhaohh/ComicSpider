@@ -8,25 +8,25 @@ namespace ComicSpider.Services
 {
     public class FileComicOutput : IComicOutput
     {
-        public void SaveCategories(List<Category> categories)
+        public void SaveCategories(List<Category> categories, string fileName)
         {
-            using (var writer = new StreamWriter($"categories_{DateTime.Now:yyyyMMdd}_{DateTime.Now:HHmmss}.csv"))
+            using (var writer = new StreamWriter(fileName ?? $"categories_{DateTime.Now:yyyyMMdd}_{DateTime.Now:HHmmss}.csv"))
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
                 csv.WriteRecords(categories);
             }
         }
 
-        public void SaveComics(List<Comic> comics)
+        public void SaveComics(List<Comic> comics, string fileName)
         {
-            using (var writer = new StreamWriter($"comics_{DateTime.Now:yyyyMMdd}_{DateTime.Now:HHmmss}.csv"))
+            using (var writer = new StreamWriter(fileName ?? $"comics_{DateTime.Now:yyyyMMdd}_{DateTime.Now:HHmmss}.csv"))
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
                 csv.WriteRecords(comics);
             }
         }
 
-        public void SaveChapters(List<Chapter> chapters)
+        public void SaveChapters(List<Chapter> chapters, string fileName)
         {
             EpubWriter writer = new EpubWriter();
             writer.AddFile("style.css", File.ReadAllText("./Resources/Css/Style.css"), EpubContentType.Css);
@@ -45,7 +45,7 @@ namespace ComicSpider.Services
 
                 writer.AddChapter(chapter.Title, string.Format(chapterTemplate, chapter.Title, chapterContent));
             }
-            writer.Write($"comic_{DateTime.Now:yyyyMMdd}_{DateTime.Now:HHmmss}.epub");
+            writer.Write(fileName ?? $"comic_{DateTime.Now:yyyyMMdd}_{DateTime.Now:HHmmss}.epub");
         }
     }
 }

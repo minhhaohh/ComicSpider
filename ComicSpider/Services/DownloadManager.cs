@@ -23,7 +23,7 @@ namespace ComicSpider.Services
             _browser = await playwright.Chromium.LaunchAsync(new() { Headless = false });
         }
 
-        public async Task GetCategoriesAsync(string url)
+        public async Task GetCategoriesAsync(string url, string fileName)
         {
             DownloadContext context = new DownloadContext()
             {
@@ -36,11 +36,11 @@ namespace ComicSpider.Services
                {
                    _progressTask = ctx.AddTask("[green bold]Progress: [/]");
                    var categories = downloader == null ? new List<Category>() : await downloader.GetCategoriesAsync(context, url);
-                   _output.SaveCategories(categories);
+                   _output.SaveCategories(categories, fileName);
                });
         }
 
-        public async Task GetComicsAsync(string url, int pageNumber, int countNumber)
+        public async Task GetComicsAsync(string url, int pageNumber, int countNumber, string fileName)
         {
             DownloadContext context = new DownloadContext()
             {
@@ -53,11 +53,11 @@ namespace ComicSpider.Services
               {
                   _progressTask = ctx.AddTask("[green bold]Progress: [/]");
                   var comics = downloader == null ? new List<Comic>() : await downloader.GetComicsAsync(context, url, pageNumber, countNumber);
-                  _output.SaveComics(comics);
+                  _output.SaveComics(comics, fileName);
               });
         }
 
-        public async Task GetChaptersAsync(string url)
+        public async Task GetChaptersAsync(string url, string fileName)
         {
             DownloadContext context = new DownloadContext()
             {
@@ -70,7 +70,7 @@ namespace ComicSpider.Services
               {
                   _progressTask = ctx.AddTask("[green bold]Progress: [/]");
                   var chapters = downloader == null ? new List<Chapter>() : await downloader.GetChaptersAsync(context, url);
-                  _output.SaveChapters(chapters);
+                  _output.SaveChapters(chapters, fileName);
               });
         }
 
@@ -83,7 +83,7 @@ namespace ComicSpider.Services
 
         void Downloader_ReportProgress(object sender, DownloadEventArgs e)
         {
-            _progressTask.Value(e.progress);
+            _progressTask.Value(e.Progress);
         }
     }
 }

@@ -24,6 +24,10 @@ namespace ComicSpider.Commands
             [DefaultValue(1)]
             public int Count { get; set; }
 
+            [Description("File name to export .csv")]
+            [CommandOption("--file")]
+            public string? FileName { get; set; }
+
             public override ValidationResult Validate()
             {
                 if (string.IsNullOrEmpty(Url))
@@ -40,12 +44,12 @@ namespace ComicSpider.Commands
             {
                 new BNSComicDownloader()
             };
-            var output = new FileComicOutput();
+            IComicOutput output = settings.FileName == null ? new ConsoleComicOutput() : new FileComicOutput();
             var downloadManager = new DownloadManager(downloaders, output);
 
             await downloadManager.InitializeAsync();
 
-            await downloadManager.GetComicsAsync(settings.Url, settings.Page, settings.Count);
+            await downloadManager.GetComicsAsync(settings.Url, settings.Page, settings.Count, settings.FileName);
 
             return 0;
         }

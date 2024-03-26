@@ -5,7 +5,7 @@ namespace ComicSpider.Services
 {
     public class ConsoleComicOutput : IComicOutput
     {
-        public void SaveCategories(List<Category> categories)
+        public void SaveCategories(List<Category> categories, string fileName)
         {
             var table = new Table()
             {
@@ -26,7 +26,7 @@ namespace ComicSpider.Services
             AnsiConsole.Write(table);
         }
 
-        public void SaveComics(List<Comic> comics)
+        public void SaveComics(List<Comic> comics, string fileName)
         {
             var table = new Table()
             {
@@ -49,7 +49,7 @@ namespace ComicSpider.Services
             AnsiConsole.Write(table);
         }
 
-        public void SaveChapters(List<Chapter> chapters)
+        public void SaveChapters(List<Chapter> chapters, string fileName)
         {
             throw new NotImplementedException();
         }

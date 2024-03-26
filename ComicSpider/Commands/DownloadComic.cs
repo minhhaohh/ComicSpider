@@ -13,6 +13,10 @@ namespace ComicSpider.Commands
             [CommandArgument(0, "[url]")]
             public string? Url { get; set; }
 
+            [Description("File name to export .epub")]
+            [CommandOption("--file")]
+            public string? FileName { get; set; }
+
             public override ValidationResult Validate()
             {
                 if (string.IsNullOrEmpty(Url))
@@ -32,7 +36,7 @@ namespace ComicSpider.Commands
 
             await downloadManager.InitializeAsync();
 
-            await downloadManager.GetChaptersAsync(settings.Url);
+            await downloadManager.GetChaptersAsync(settings.Url, settings.FileName);
 
             return 0;
         }
