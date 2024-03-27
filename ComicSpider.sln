@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicSpider", "ComicSpider\ComicSpider.csproj", "{3D7B5545-3BCA-4E20-9B6F-79D4A40A463E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComicSpider", "ComicSpider\ComicSpider.csproj", "{3D7B5545-3BCA-4E20-9B6F-79D4A40A463E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeographySpider", "GeographySpider\GeographySpider.csproj", "{1CB6346E-79EA-46F1-94EB-4D77C68136AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{3D7B5545-3BCA-4E20-9B6F-79D4A40A463E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D7B5545-3BCA-4E20-9B6F-79D4A40A463E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D7B5545-3BCA-4E20-9B6F-79D4A40A463E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CB6346E-79EA-46F1-94EB-4D77C68136AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CB6346E-79EA-46F1-94EB-4D77C68136AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CB6346E-79EA-46F1-94EB-4D77C68136AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CB6346E-79EA-46F1-94EB-4D77C68136AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
