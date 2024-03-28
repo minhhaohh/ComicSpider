@@ -82,6 +82,11 @@ namespace GeographySpider.Utilities
             return GetChildElementById("DXPagerTop");
         }
 
+        public HtmlNode GetMainTable()
+        {
+            return GetChildElementById("DXMainTable");
+        }
+
         public string GetParentRowsWindow()
         {
             return _gridName + "_DXparentrowswindow";
@@ -122,7 +127,7 @@ namespace GeographySpider.Utilities
             return _document.QuerySelector($"#{_gridName}_{chidName}");
         }
 
-        public string PrepareCallbackArg(string arg, HtmlNode rootTD)
+        public string PrepareCallbackArg(string arg)
         {
             var prepareArg = FormatCallbackArg("EV", GetEditorValues()) + FormatCallbackArg("SR", GetSelectedState()) + FormatCallbackArg("FR", GetFocusedRowInput()) + FormatCallbackArg("CR", GetColResizedInput()) + FormatCallbackArg("GB", arg);
             return prepareArg;
@@ -201,7 +206,7 @@ namespace GeographySpider.Utilities
 
         public string GetSelectedState()
         {
-            return GetSelectionInput().InnerText;
+            return GetSelectionInput()?.InnerText;
         }
 
         public string GetCallbackArg(string id, ActionPage action)
