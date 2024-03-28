@@ -21,14 +21,23 @@ namespace GeographySpider.Services
 
         private FilterInput _filterInput;
 
-        public async Task Initialize()
+        public GeographyDownloader()
         {
             _client = new HttpClient();
             _html = new HtmlDocument();
             _formValues = new Dictionary<string, string>();
-            await LoadHomePageAsync();
+            LoadHomePageAsync().Wait();
             GetFormValues();
         }
+
+        //public async Task Initialize()
+        //{
+        //    _client = new HttpClient();
+        //    _html = new HtmlDocument();
+        //    _formValues = new Dictionary<string, string>();
+        //    await LoadHomePageAsync();
+        //    GetFormValues();
+        //}
 
         public async Task<List<Province>> GetDataProvincesAsync()
         {

@@ -1,4 +1,6 @@
 ﻿using ComicSpider.Commands;
+using ComicSpider.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console.Cli;
 
 internal class Program
@@ -6,6 +8,17 @@ internal class Program
     static void Main(string[] args)
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+        var serviceProvider = new ServiceCollection()
+            .AddSingleton<IComicDowloader, BNSComicDownloader>()
+            .AddSingleton<IComicOutput, ConsoleComicOutput>()
+            .AddSingleton<DownloadManager>()
+            .BuildServiceProvider();
+
+        //var downloadManager = serviceProvider.GetService<DownloadManager>();
+
+        //await downloadManager.GetCategoriesAsync("https://bachngocsach.vip/", null);
+
         var app = new CommandApp();
         app.Configure(config =>
         {

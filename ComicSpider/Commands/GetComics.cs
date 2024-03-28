@@ -1,4 +1,5 @@
 ﻿using ComicSpider.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Playwright;
 using Spectre.Console;
 using Spectre.Console.Cli;
@@ -8,6 +9,15 @@ namespace ComicSpider.Commands
 {
     public class GetComics : AsyncCommand<GetComics.Settings>
     {
+        private IServiceProvider _serviceProvider;
+        private DownloadManager _downloadManager;
+
+        public GetComics(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+            _downloadManager = _serviceProvider.GetRequiredService<DownloadManager>();
+        }
+
         public sealed class Settings : CommandSettings
         {
             [Description("Url to get list of comics")]
@@ -40,16 +50,16 @@ namespace ComicSpider.Commands
 
         public async override Task<int> ExecuteAsync(CommandContext context, Settings settings)
         {
-            var downloaders = new List<IComicDowloader>()
-            {
-                new BNSComicDownloader()
-            };
-            IComicOutput output = settings.FileName == null ? new ConsoleComicOutput() : new FileComicOutput();
-            var downloadManager = new DownloadManager(downloaders, output);
+            //var downloaders = new List<IComicDowloader>()
+            //{
+            //    new BNSComicDownloader()
+            //};
+            //IComicOutput output = settings.FileName == null ? new ConsoleComicOutput() : new FileComicOutput();
+            //var downloadManager = new DownloadManager(downloaders, output);
 
-            await downloadManager.InitializeAsync();
+            //await downloadManager.InitializeAsync();
 
-            await downloadManager.GetComicsAsync(settings.Url, settings.Page, settings.Count, settings.FileName);
+            await _downloadManager.GetComicsAsync(settings.Url, settings.Page, settings.Count, settings.FileName);
 
             return 0;
         }

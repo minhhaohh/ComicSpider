@@ -2,6 +2,7 @@
 using GeographySpider.Models;
 using GeographySpider.Services;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 internal class Program
 {
@@ -15,19 +16,17 @@ internal class Program
 
         ConfigureDatabase();
 
-        var geographyDownloader = new DevsoftGeographyDownloader();
-        var geographySaveOutput = new SQLGeographySaveOutput();
+        var serviceProvider = new ServiceCollection()
+            .AddSingleton<IGeographyDownloader, DevsoftGeographyDownloader>()
+            .AddSingleton<IGeographySaveOutput, SQLGeographySaveOutput>()
+            .AddSingleton<DownloadManager>()
+            .BuildServiceProvider();
 
-        await geographyDownloader.Initialize();
+        var downloadManager = serviceProvider.GetService<DownloadManager>();
 
-        var provinces = await geographyDownloader.GetDataProvincesAsync();
-        geographySaveOutput.SaveProvices(provinces);
-
-        var districts = await geographyDownloader.GetDataDistrictsAsync();
-        geographySaveOutput.SaveDistricts(districts);
-
-        var wards = await geographyDownloader.GetDataWardsAsync();
-        geographySaveOutput.SaveWards(wards);
+        var provinceRows = await downloadManager.SaveProvices();
+        var districtRows = await downloadManager.SaveDistricts();
+        var wardRows = await downloadManager.SaveWards();
     }
 
     static void ConfigureDatabase()

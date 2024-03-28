@@ -8,6 +8,11 @@ namespace ComicSpider.Services
 {
     public class FileComicOutput : IComicOutput
     {
+        public FileComicOutput() 
+        {
+
+        }
+
         public void SaveCategories(List<Category> categories, string fileName)
         {
             using (var writer = new StreamWriter(fileName ?? $"categories_{DateTime.Now:yyyyMMdd}_{DateTime.Now:HHmmss}.csv"))

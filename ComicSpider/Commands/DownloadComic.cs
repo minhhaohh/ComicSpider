@@ -1,4 +1,5 @@
 ﻿using ComicSpider.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 using Spectre.Console.Cli;
 using System.ComponentModel;
@@ -7,6 +8,15 @@ namespace ComicSpider.Commands
 {
     public class DownloadComic : AsyncCommand<DownloadComic.Settings>
     {
+        private IServiceProvider _serviceProvider;
+        private DownloadManager _downloadManager;
+
+        public DownloadComic(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+            _downloadManager = _serviceProvider.GetRequiredService<DownloadManager>();
+        }
+
         public sealed class Settings : CommandSettings
         {
             [Description("Url to get list of categories")]
@@ -27,16 +37,16 @@ namespace ComicSpider.Commands
 
         public async override Task<int> ExecuteAsync(CommandContext context, Settings settings)
         {
-            var downloaders = new List<IComicDowloader>()
-            {
-                new BNSComicDownloader()
-            };
-            var output = new FileComicOutput();
-            var downloadManager = new DownloadManager(downloaders, output);
+            //var downloaders = new List<IComicDowloader>()
+            //{
+            //    new BNSComicDownloader()
+            //};
+            //var output = new FileComicOutput();
+            //var downloadManager = new DownloadManager(downloaders, output);
 
-            await downloadManager.InitializeAsync();
+            //await downloadManager.InitializeAsync();
 
-            await downloadManager.GetChaptersAsync(settings.Url, settings.FileName);
+            await _downloadManager.GetChaptersAsync(settings.Url, settings.FileName);
 
             return 0;
         }

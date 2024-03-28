@@ -10,6 +10,11 @@ namespace ComicSpider.Services
 
         public event EventHandler<DownloadEventArgs> ReportProgress;
 
+        public BNSComicDownloader()
+        {
+
+        }
+
         protected virtual void OnDownloadEvent(DownloadEventArgs e)
         {
             ReportProgress?.Invoke(this, e);

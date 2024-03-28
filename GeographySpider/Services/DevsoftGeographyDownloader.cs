@@ -13,25 +13,33 @@ namespace GeographySpider.Services
 {
     public class DevsoftGeographyDownloader : IGeographyDownloader
     {
-        private HttpClient _client;
+        HttpClient _client;
 
-        private HtmlForm _form;
+        HtmlForm _form;
 
-        private HtmlNode _document;
+        HtmlNode _document;
 
-        private Dictionary<string, string> _formValues;
+        Dictionary<string, string> _formValues;
 
-        private ASPxClientGrid _aspClienGrid;
+        ASPxClientGrid _aspClienGrid;
 
-        private FilterInput _filterInput;
+        FilterInput _filterInput;
 
-        public async Task Initialize()
+        public DevsoftGeographyDownloader()
         {
             _client = new HttpClient();
             _formValues = new Dictionary<string, string>();
-            await LoadHomePageAsync();
+            LoadHomePageAsync().Wait();
             GetFormValues();
         }
+
+        //public async Task Initialize()
+        //{
+        //    _client = new HttpClient();
+        //    _formValues = new Dictionary<string, string>();
+        //    await LoadHomePageAsync();
+        //    GetFormValues();
+        //}
 
         public async Task<List<Province>> GetDataProvincesAsync()
         {
