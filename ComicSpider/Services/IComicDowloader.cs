@@ -8,10 +8,10 @@ namespace ComicSpider.Services
 
         event EventHandler<DownloadEventArgs> ReportProgress;
 
-        Task<List<Category>> GetCategoriesAsync(string url);
+        Task<List<Category>> GetCategoriesAsync(DownloadContext context, string url);
 
-        Task<List<Comic>> GetComicsAsync(string url, int pageNumber, int countNumber);
+        Task<List<Comic>> GetComicsAsync(DownloadContext context, string url, int pageNumber, int countNumber);
 
-        Task<List<Chapter>> GetChaptersAsync(string url, string username, string password);
+        Task<List<Chapter>> GetChaptersAsync(DownloadContext context, string url, string username, string password);
     }
 }

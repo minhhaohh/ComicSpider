@@ -1,5 +1,6 @@
 ﻿using ComicSpider.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.Playwright;
 using Spectre.Console;
 
 namespace ComicSpider.Services
@@ -12,6 +13,8 @@ namespace ComicSpider.Services
         
         private readonly IComicOutput _output;
 
+        private IBrowser _browser;
+
         private ProgressTask _progressTask;
 
         public DownloadManager(ILogger<DownloadManager> logger, IComicDowloader downloader, IComicOutput output)
@@ -21,16 +24,26 @@ namespace ComicSpider.Services
             _output = output;
         }
 
+        public async Task InitializeAsync()
+        {
+            var playwright = await Playwright.CreateAsync();
+            _browser = await playwright.Chromium.LaunchAsync(new() { Headless = false });
+        }
+
         public async Task GetCategoriesAsync(string url, string fileName)
         {
             try
             {
+                DownloadContext context = new DownloadContext()
+                {
+                    Page = await _browser.NewPageAsync(),
+                };
                 _downloader.ReportProgress += Downloader_ReportProgress;
                 await AnsiConsole.Progress()
                    .StartAsync(async ctx =>
                    {
                        _progressTask = ctx.AddTask("[green bold]Progress: [/]");
-                       var categories = await _downloader.GetCategoriesAsync(url);
+                       var categories = await _downloader.GetCategoriesAsync(context, url);
                        if (categories == null || categories.Count == 0)
                        {
                            _logger.LogWarning("No data categories found!!!");
@@ -50,12 +63,16 @@ namespace ComicSpider.Services
         {
             try
             {
+                DownloadContext context = new DownloadContext()
+                {
+                    Page = await _browser.NewPageAsync(),
+                };
                 _downloader.ReportProgress += Downloader_ReportProgress;
                 await AnsiConsole.Progress()
                   .StartAsync(async ctx =>
                   {
                       _progressTask = ctx.AddTask("[green bold]Progress: [/]");
-                      var comics = await _downloader.GetComicsAsync(url, pageNumber, countNumber);
+                      var comics = await _downloader.GetComicsAsync(context, url, pageNumber, countNumber);
                       if (comics == null || comics.Count == 0)
                       {
                           _logger.LogWarning("No data comics found!!!");
@@ -74,12 +91,16 @@ namespace ComicSpider.Services
         {
             try
             {
+                DownloadContext context = new DownloadContext()
+                {
+                    Page = await _browser.NewPageAsync(),
+                };
                 _downloader.ReportProgress += Downloader_ReportProgress;
                 await AnsiConsole.Progress()
                   .StartAsync(async ctx =>
                   {
                       _progressTask = ctx.AddTask("[green bold]Progress: [/]");
-                      var chapters = await _downloader.GetChaptersAsync(url, username, password);
+                      var chapters = await _downloader.GetChaptersAsync(context, url, username, password);
                       if (chapters == null || chapters.Count == 0)
                       {
                           _logger.LogWarning("No data chapters comic found!!!");

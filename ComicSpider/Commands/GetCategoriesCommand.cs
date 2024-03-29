@@ -34,6 +34,7 @@ namespace ComicSpider.Commands
 
         public async override Task<int> ExecuteAsync(CommandContext context, Settings settings)
         {
+            await _downloadManager.InitializeAsync();
             await _downloadManager.GetCategoriesAsync(settings.Url, settings.FileName);
 
             return 0;
