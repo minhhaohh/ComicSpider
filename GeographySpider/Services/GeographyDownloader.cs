@@ -3,12 +3,15 @@ using GeographySpider.Consts;
 using GeographySpider.Models;
 using GeographySpider.Utilities;
 using HtmlAgilityPack;
+using Microsoft.Extensions.Logging;
 using System.Net;
 
 namespace GeographySpider.Services
 {
     public class GeographyDownloader : IGeographyDownloader
     {
+        private readonly ILogger<DevsoftGeographyDownloader> _logger;
+
         private HttpClient _client;
 
         private HtmlDocument _html;
@@ -21,8 +24,9 @@ namespace GeographySpider.Services
 
         private FilterInput _filterInput;
 
-        public GeographyDownloader()
+        public GeographyDownloader(ILogger<DevsoftGeographyDownloader> logger)
         {
+            _logger = logger;
             _client = new HttpClient();
             _html = new HtmlDocument();
             _formValues = new Dictionary<string, string>();
@@ -30,85 +34,97 @@ namespace GeographySpider.Services
             GetFormValues();
         }
 
-        //public async Task Initialize()
-        //{
-        //    _client = new HttpClient();
-        //    _html = new HtmlDocument();
-        //    _formValues = new Dictionary<string, string>();
-        //    await LoadHomePageAsync();
-        //    GetFormValues();
-        //}
-
         public async Task<List<Province>> GetDataProvincesAsync()
         {
             var data = new List<Province>();
-
-            _filterInput = FilterInput.Province;
-
-            FillSearchForm();
-
-            await SubmitFormAsync();
-            var currentPage = 1;
-
-            while (true)
+            try
             {
-                data.AddRange(ExtractDataProvinces());
-                var nextButton = GetNextButton();
-                if (nextButton == null)
-                    break;
-                await LoadNextPageAsync();
-                currentPage++;
-            }
+                _logger.LogInformation("Get data provinces.");
 
+                _filterInput = FilterInput.Province;
+
+                FillSearchForm();
+
+                await SubmitFormAsync();
+                var currentPage = 1;
+
+                while (true)
+                {
+                    data.AddRange(ExtractDataProvinces());
+                    var nextButton = GetNextButton();
+                    if (nextButton == null)
+                        break;
+                    await LoadNextPageAsync();
+                    currentPage++;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error: " + ex.Message);
+            }
             return data;
         }
 
         public async Task<List<District>> GetDataDistrictsAsync()
         {
             var data = new List<District>();
-
-            _filterInput = FilterInput.District;
-
-            FillSearchForm();
-
-            await SubmitFormAsync();
-            var currentPage = 1;
-
-            while (true)
+            try
             {
-                data.AddRange(ExtractDataDistricts());
-                var nextButton = GetNextButton();
-                if (nextButton == null)
-                    break;
-                await LoadNextPageAsync();
-                currentPage++;
-            }
+                _logger.LogInformation("Get data districts.");
 
+                _filterInput = FilterInput.District;
+
+                FillSearchForm();
+
+                await SubmitFormAsync();
+                var currentPage = 1;
+
+                while (true)
+                {
+                    data.AddRange(ExtractDataDistricts());
+                    var nextButton = GetNextButton();
+                    if (nextButton == null)
+                        break;
+                    await LoadNextPageAsync();
+                    currentPage++;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error: " + ex.Message);
+            }
             return data;
         }
 
         public async Task<List<Ward>> GetDataWardsAsync()
         {
             var data = new List<Ward>();
-
-            _filterInput = FilterInput.Ward;
-
-            FillSearchForm();
-
-            await SubmitFormAsync();
-
-            var currentPage = 1;
-
-            while (true)
+            try
             {
-                data.AddRange(ExtractDataWards());
-                var nextButton = GetNextButton();
-                if (nextButton == null)
-                    break;
-                await LoadNextPageAsync();
-                currentPage++;
-            }
+                _logger.LogInformation("Get data wards.");
 
+                _filterInput = FilterInput.Ward;
+
+                FillSearchForm();
+
+                await SubmitFormAsync();
+
+                var currentPage = 1;
+
+                while (true)
+                {
+                    data.AddRange(ExtractDataWards());
+                    var nextButton = GetNextButton();
+                    if (nextButton == null)
+                        break;
+                    await LoadNextPageAsync();
+                    currentPage++;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error: " + ex.Message);
+            }
             return data;
         }
 

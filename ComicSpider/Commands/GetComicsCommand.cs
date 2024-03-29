@@ -1,28 +1,24 @@
 ﻿using ComicSpider.Services;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Playwright;
 using Spectre.Console;
 using Spectre.Console.Cli;
 using System.ComponentModel;
 
 namespace ComicSpider.Commands
 {
-    public class GetComics : AsyncCommand<GetComics.Settings>
+    public class GetComicsCommand : AsyncCommand<GetComicsCommand.Settings>
     {
-        private IServiceProvider _serviceProvider;
-        private DownloadManager _downloadManager;
+        private readonly DownloadManager _downloadManager;
 
-        public GetComics(IServiceProvider serviceProvider)
+        public GetComicsCommand(DownloadManager downloadManager)
         {
-            _serviceProvider = serviceProvider;
-            _downloadManager = _serviceProvider.GetRequiredService<DownloadManager>();
+            _downloadManager = downloadManager;
         }
 
         public sealed class Settings : CommandSettings
         {
             [Description("Url to get list of comics")]
             [CommandArgument(0, "[url]")]
-            public string? Url { get; set; }
+            public string Url { get; set; }
 
             [Description("First page to get list of comics")]
             [CommandOption("--page")]
@@ -36,7 +32,7 @@ namespace ComicSpider.Commands
 
             [Description("File name to export .csv")]
             [CommandOption("--file")]
-            public string? FileName { get; set; }
+            public string FileName { get; set; }
 
             public override ValidationResult Validate()
             {
@@ -50,15 +46,6 @@ namespace ComicSpider.Commands
 
         public async override Task<int> ExecuteAsync(CommandContext context, Settings settings)
         {
-            //var downloaders = new List<IComicDowloader>()
-            //{
-            //    new BNSComicDownloader()
-            //};
-            //IComicOutput output = settings.FileName == null ? new ConsoleComicOutput() : new FileComicOutput();
-            //var downloadManager = new DownloadManager(downloaders, output);
-
-            //await downloadManager.InitializeAsync();
-
             await _downloadManager.GetComicsAsync(settings.Url, settings.Page, settings.Count, settings.FileName);
 
             return 0;

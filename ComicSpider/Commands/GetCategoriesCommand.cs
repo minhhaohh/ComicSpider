@@ -1,31 +1,28 @@
 ﻿using ComicSpider.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 using Spectre.Console.Cli;
 using System.ComponentModel;
 
 namespace ComicSpider.Commands
 {
-    public class GetCategories : AsyncCommand<GetCategories.Settings>
+    public class GetCategoriesCommand : AsyncCommand<GetCategoriesCommand.Settings>
     {
-        private IServiceProvider _serviceProvider;
-        private DownloadManager _downloadManager;
+        private readonly DownloadManager _downloadManager;
 
-        public GetCategories(IServiceProvider serviceProvider)
+        public GetCategoriesCommand(DownloadManager downloadManager)
         {
-            _serviceProvider = serviceProvider;
-            _downloadManager = _serviceProvider.GetRequiredService<DownloadManager>();
+            _downloadManager = downloadManager;
         }
 
         public sealed class Settings : CommandSettings
         {
             [Description("Url to get list of categories")]
             [CommandArgument(0, "[url]")]
-            public string? Url { get; set; }
+            public string Url { get; set; }
 
             [Description("File name to export .csv")]
             [CommandOption("--file")]
-            public string? FileName { get; set; }
+            public string FileName { get; set; }
 
             public override ValidationResult Validate()
             {
@@ -37,15 +34,6 @@ namespace ComicSpider.Commands
 
         public async override Task<int> ExecuteAsync(CommandContext context, Settings settings)
         {
-            //var downloaders = new List<IComicDowloader>()
-            //{
-            //    new BNSComicDownloader()
-            //};
-            //var output = settings.FileName == null ? new ConsoleComicOutput() : new FileComicOutput();
-            //var downloadManager = new DownloadManager(downloaders, output);
-
-            //await downloadManager.InitializeAsync();
-
             await _downloadManager.GetCategoriesAsync(settings.Url, settings.FileName);
 
             return 0;

@@ -3,12 +3,14 @@ using GeographySpider.Models;
 using GeographySpider.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NLog.Extensions.Logging;
 
-internal class Program
+public class Program
 {
     static IConfiguration Configuration;
+    static IServiceProvider ServiceProvider;
 
-    async static Task Main(string[] args)
+    public async static Task Main(string[] args)
     {
         Configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -16,20 +18,24 @@ internal class Program
 
         ConfigureDatabase();
 
-        var serviceProvider = new ServiceCollection()
+        ServiceProvider = new ServiceCollection()
             .AddSingleton<IGeographyDownloader, DevsoftGeographyDownloader>()
             .AddSingleton<IGeographySaveOutput, SQLGeographySaveOutput>()
             .AddSingleton<DownloadManager>()
+            .AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddNLog();
+            })
             .BuildServiceProvider();
 
-        var downloadManager = serviceProvider.GetService<DownloadManager>();
+        var downloadManager = ServiceProvider.GetService<DownloadManager>();
 
         var provinceRows = await downloadManager.SaveProvices();
         var districtRows = await downloadManager.SaveDistricts();
         var wardRows = await downloadManager.SaveWards();
     }
 
-    static void ConfigureDatabase()
+    private static void ConfigureDatabase()
     {
         var connectionStrings = Configuration.GetSection(DatabaseConnection.ConfigSectionName).Get<List<DatabaseConnection>>();
 

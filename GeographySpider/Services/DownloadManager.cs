@@ -1,8 +1,4 @@
-﻿using Devsoft.DB.Models;
-using Devsoft.DB.Models.Linq.MsSQL;
-using GeographySpider.Models;
-
-namespace GeographySpider.Services
+﻿namespace GeographySpider.Services
 {
     public class DownloadManager
     {

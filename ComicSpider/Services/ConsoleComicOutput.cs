@@ -5,6 +5,8 @@ namespace ComicSpider.Services
 {
     public class ConsoleComicOutput : IComicOutput
     {
+        public ConsoleComicOutput() { }
+
         public void SaveCategories(List<Category> categories, string fileName)
         {
             var table = new Table()
